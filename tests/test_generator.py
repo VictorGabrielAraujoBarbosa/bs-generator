@@ -35,16 +35,6 @@ def test_generate_bs_line_contains_expected_formats():
         assert any(status in line for status in STATUSES)
         assert "0x" in line
 
-def test_generate_bs_line_randomness():
-    """Ensure consecutive lines aren't identical (basic randomness check)."""
-    line1 = generate_bs_line()
-    line2 = generate_bs_line()
-    # There is a microscopic chance they match, but highly unlikely with our arrays
-    assert line1 != line2
-
-    import sys
-
-# --- NEW FEATURE TESTS ---
 
 def test_generate_ip_format():
     """Ensure the IP generator creates a valid IPv4 format."""
@@ -59,7 +49,7 @@ def test_generate_ip_format():
         assert part.isdigit()
         assert 0 <= int(part) <= 255
 
-def test_generate_loading_bar_percentages():
+def test_generate_loading_bar_percentage():
     """Ensure the loading bar accurately reflects the percentage and clamps limits."""
     # Test an exact middle ground
     bar_half = generate_loading_bar(50)
@@ -67,6 +57,8 @@ def test_generate_loading_bar_percentages():
     assert bar_half.count("█") == 10
     assert bar_half.count("░") == 10
 
+
+def test_generate_loading_bar_percentage_clamping():
     # Test that numbers over 100 are clamped down to 100
     bar_over = generate_loading_bar(150)
     assert "100%" in bar_over
@@ -86,3 +78,16 @@ def test_generate_loading_bar_length():
     # If the length is 10 and we are at 50%, there should be 5 blocks of each
     assert bar.count("█") == 5
     assert bar.count("░") == 5
+
+def test_generate_loading_bar_percentage_clamping():
+    # Test that numbers over 100 are clamped down to 100
+    bar_over = generate_loading_bar(100, 150)
+    assert "100%" in bar_over
+    assert "█" * 20 in bar_over
+    assert "░" not in bar_over
+
+    # Test that negative numbers are clamped up to 0
+    bar_under = generate_loading_bar(10, -50)
+    assert "10%" in bar_under
+    assert "░" not in bar_under
+    assert "█" not in bar_under

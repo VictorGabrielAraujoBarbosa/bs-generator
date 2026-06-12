@@ -21,7 +21,8 @@ def generate_ip():
 def generate_loading_bar(percentage, length=20):
     """Generates a text-based ASCII loading bar."""
     # Clamp the percentage between 0 and 100
-    percentage = max(0, min(100, percentage)) 
+    percentage = max(0, min(100, percentage))
+    length = max(0, min(20, length))
     
     filled_length = int(length * percentage // 100)
     bar = '█' * filled_length + '░' * (length - filled_length)
